@@ -1,54 +1,35 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-
-const melody = [523.25, 659.25, 783.99, 659.25, 698.46, 587.33, 523.25, 392];
+import { letterText } from "./letter";
 
 export default function Home() {
   const [scene, setScene] = useState(0);
   const [letterOpen, setLetterOpen] = useState(false);
   const [playing, setPlaying] = useState(false);
-  const audioRef = useRef<AudioContext | null>(null);
-  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const noteRef = useRef(0);
+  const [songEnded, setSongEnded] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   const touchStart = useRef(0);
 
   const stopTape = () => {
-    if (timerRef.current) clearInterval(timerRef.current);
-    timerRef.current = null;
-    audioRef.current?.close();
-    audioRef.current = null;
+    audioRef.current?.pause();
     setPlaying(false);
   };
 
-  const playNote = () => {
-    const context = audioRef.current;
-    if (!context) return;
-    const oscillator = context.createOscillator();
-    const gain = context.createGain();
-    oscillator.type = "triangle";
-    oscillator.frequency.value = melody[noteRef.current % melody.length];
-    gain.gain.setValueAtTime(0.0001, context.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.08, context.currentTime + 0.02);
-    gain.gain.exponentialRampToValueAtTime(0.0001, context.currentTime + 0.22);
-    oscillator.connect(gain).connect(context.destination);
-    oscillator.start();
-    oscillator.stop(context.currentTime + 0.24);
-    noteRef.current += 1;
-  };
-
   const toggleTape = async () => {
+    const audio = audioRef.current;
+    if (!audio) return;
     if (playing) {
       stopTape();
       return;
     }
-    const context = new AudioContext();
-    audioRef.current = context;
-    setPlaying(true);
-    if (context.state === "suspended") void context.resume();
-    noteRef.current = 0;
-    playNote();
-    timerRef.current = setInterval(playNote, 320);
+    if (audio.ended || songEnded) audio.currentTime = 0;
+    setSongEnded(false);
+    try {
+      await audio.play();
+    } catch {
+      setPlaying(false);
+    }
   };
 
   useEffect(() => {
@@ -60,10 +41,10 @@ export default function Home() {
     window.addEventListener("keydown", onKeyDown);
     return () => {
       window.removeEventListener("keydown", onKeyDown);
-      if (timerRef.current) clearInterval(timerRef.current);
-      audioRef.current?.close();
     };
   }, [letterOpen]);
+
+  useEffect(() => () => audioRef.current?.pause(), []);
 
   const onTouchEnd = (event: React.TouchEvent) => {
     if (letterOpen) return;
@@ -78,6 +59,17 @@ export default function Home() {
       onTouchStart={(event) => (touchStart.current = event.touches[0].clientX)}
       onTouchEnd={onTouchEnd}
     >
+      <audio
+        ref={audioRef}
+        src="audio/sleepless-dawn.mp3"
+        preload="metadata"
+        onPlay={() => setPlaying(true)}
+        onPause={() => setPlaying(false)}
+        onEnded={() => {
+          setPlaying(false);
+          setSongEnded(true);
+        }}
+      />
       <div className="paper-noise" aria-hidden="true" />
       <div className="scene-track" style={{ transform: `translateX(-${scene * 50}%)` }}>
         <section className="scene intro-scene" aria-hidden={scene !== 0}>
@@ -92,7 +84,10 @@ export default function Home() {
           </div>
 
           <div className="cassette-cluster">
-            <p className="cassette-note">i think about us<br />while made this song <span>↘</span></p>
+            <p className={`cassette-note ${songEnded ? "song-ended" : ""}`}>
+              {songEnded ? <span className="ended-copy">this song is too short<br />to tell our story.</span> : <>i think about us<br />while made this song</>}
+              <span className="note-arrow">↘</span>
+            </p>
             <button
               className={`cassette ${playing ? "is-playing" : ""}`}
               type="button"
@@ -109,25 +104,21 @@ export default function Home() {
           </div>
 
           <div className={`letter-wrap ${letterOpen ? "is-open" : ""}`}>
-            <button
-              className={`letter-object ${letterOpen ? "is-open" : ""}`}
-              type="button"
-              onClick={() => setLetterOpen((open) => !open)}
-              aria-expanded={letterOpen}
-              aria-label={letterOpen ? "Fold the letter" : "Unfold the letter"}
-            >
-              <span className="fold-panel fold-a" /><span className="fold-panel fold-b" />
-              <span className="fold-panel fold-c" /><span className="fold-panel fold-d" />
-              <span className="letter-seal">for you</span>
-              <span className="letter-copy">
-                <strong>dear maulida,</strong>
-                <span>Happy birthday. Selamat menginjak umur 28.</span>
-                <span>I hope the days ahead are kind to you, and every dream you keep reaches you at the right time.</span>
-                <span>I root for your future and dreams. Wopyu.</span>
-                <em>— always rooting for you</em>
-              </span>
-            </button>
-            <span className="letter-hint">{letterOpen ? "tap the paper to fold it" : "tap to unfold my letter ↗"}</span>
+            {letterOpen ? (
+              <div className="letter-object is-open" role="document" aria-label="Birthday letter for Zia">
+                <span className="fold-panel fold-a" /><span className="fold-panel fold-b" />
+                <span className="fold-panel fold-c" /><span className="fold-panel fold-d" />
+                <span className="letter-copy"><span className="letter-body">{letterText}</span></span>
+              </div>
+            ) : (
+              <button className="letter-object" type="button" onClick={() => setLetterOpen(true)} aria-expanded="false" aria-label="Unfold the letter">
+                <span className="fold-panel fold-a" /><span className="fold-panel fold-b" />
+                <span className="fold-panel fold-c" /><span className="fold-panel fold-d" />
+                <span className="letter-seal">for you</span>
+              </button>
+            )}
+            {letterOpen && <button className="letter-close" type="button" onClick={() => setLetterOpen(false)}>fold it back ×</button>}
+            <span className="letter-hint">{letterOpen ? "scroll to read my letter" : "tap to unfold my letter ↗"}</span>
           </div>
 
           <CapyNav direction="next" label="Go to the birthday page" onClick={() => setScene(1)} />
@@ -145,7 +136,7 @@ export default function Home() {
 
           <div className="capy-stage" aria-label="A capybara walking in place with a birthday hat and party blower">
             <span className="ground-shadow" aria-hidden="true" />
-            <img src="/assets/capybara-birthday.png" alt="Capybara wearing a birthday hat and party blower" />
+            <img src="assets/capybara-birthday.png" alt="Capybara wearing a birthday hat and party blower" />
             <span className="walk-dust dust-one" aria-hidden="true">✦</span>
             <span className="walk-dust dust-two" aria-hidden="true">·</span>
           </div>
@@ -153,7 +144,7 @@ export default function Home() {
           <div className="birthday-message">
             <p>selamat menginjak umur <strong>28</strong>.</p>
             <p>i root for your future and dreams!</p>
-            <span>wopyu.</span>
+            <span>wopyu!</span>
           </div>
 
           <CapyNav direction="back" label="Back to the first page" onClick={() => setScene(0)} />
@@ -171,7 +162,7 @@ export default function Home() {
 function CapyNav({ direction, label, onClick }: { direction: "next" | "back"; label: string; onClick: () => void }) {
   return (
     <button className={`capy-nav ${direction}`} type="button" onClick={onClick} aria-label={label}>
-      <img src="/assets/capybara-next.png" alt="" aria-hidden="true" />
+      <img src="assets/capybara-next.png" alt="" aria-hidden="true" />
       <span>{direction === "next" ? "next page" : "go back"}</span>
     </button>
   );

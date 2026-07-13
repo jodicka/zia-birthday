@@ -51,7 +51,9 @@ body {
 
 .cassette-cluster { position: absolute; right: 8vw; top: 17%; width: clamp(230px, 23vw, 360px); transform: rotate(3deg); }
 .cassette-note { margin: 0 0 4px -70px; color: #d85f51; font-size: clamp(16px, 1.7vw, 25px); line-height: 1.1; font-weight: 700; transform: rotate(-7deg); }
-.cassette-note span { display: inline-block; font-size: 46px; transform: translate(5px, 12px) rotate(8deg); }
+.cassette-note .note-arrow { display: inline-block; font-size: 46px; transform: translate(5px, 12px) rotate(8deg); }
+.cassette-note .ended-copy { display: inline; font-size: inherit; transform: none; }
+.cassette-note.song-ended { margin-left: -105px; max-width: 315px; }
 .cassette { display: block; position: relative; width: 100%; aspect-ratio: 1.58; border: 4px solid var(--ink); border-radius: 17px; background: #71b0cf; box-shadow: 9px 10px 0 rgba(63,52,45,.22); cursor: pointer; transition: transform .2s ease; }
 .cassette:hover { transform: translateY(-3px) rotate(-1deg); }
 .cassette-label { position: absolute; left: 11%; right: 11%; top: 10%; padding: 6px; background: #fff4cf; border: 3px solid var(--ink); border-radius: 7px; font: 800 clamp(11px, 1.1vw, 16px)/1 Arial, sans-serif; letter-spacing: .13em; text-transform: uppercase; }
@@ -70,15 +72,19 @@ body {
 .fold-c { left: 0; bottom: 0; transform-origin: right top; transform: rotateX(38deg) rotateY(8deg); }
 .fold-d { right: 0; bottom: 0; transform-origin: left top; transform: rotateX(50deg) rotateY(-22deg); }
 .letter-seal { position: absolute; z-index: 3; left: 50%; top: 50%; transform: translate(-50%,-50%) rotate(-7deg); display: grid; place-items: center; width: 58px; height: 58px; border-radius: 50%; background: var(--coral); color: #fff8df; border: 3px solid var(--ink); font-weight: 700; transition: opacity .25s ease; }
-.letter-copy { position: absolute; z-index: 4; inset: 8%; display: flex; flex-direction: column; justify-content: center; gap: clamp(6px, 1.1vh, 13px); padding: 4%; text-align: left; opacity: 0; transform: scale(.82); transition: opacity .35s ease .35s, transform .5s ease .28s; pointer-events: none; font-family: "Segoe Print", "Comic Sans MS", cursive; font-size: clamp(12px, 1.12vw, 17px); line-height: 1.35; }
+.letter-copy { position: absolute; z-index: 4; inset: 5%; display: block; padding: 4% 5%; text-align: left; opacity: 0; transform: scale(.82); transition: opacity .35s ease .35s, transform .5s ease .28s; pointer-events: none; overflow-y: auto; overscroll-behavior: contain; font-family: "Segoe Print", "Comic Sans MS", cursive; font-size: clamp(12px, 1.02vw, 16px); line-height: 1.55; scrollbar-color: #d85f51 transparent; scrollbar-width: thin; }
+.letter-body { white-space: pre-line; }
+.letter-copy::-webkit-scrollbar { width: 7px; }
+.letter-copy::-webkit-scrollbar-thumb { background: #d85f51; border-radius: 999px; }
 .letter-copy strong { color: #d85f51; font-size: 1.15em; }
 .letter-copy em { text-align: right; font-size: .86em; }
 .letter-hint { font-size: clamp(12px, 1.2vw, 17px); color: #7c6558; font-weight: 700; transform: rotate(-3deg); }
 .letter-wrap.is-open { position: fixed; inset: 0 auto auto 0; width: 100vw; height: 100dvh; background: rgba(63,52,45,.45); display: grid; place-items: center; z-index: 80; padding: 24px; }
-.letter-wrap.is-open .letter-object { width: min(88vw, 660px); max-height: 76vh; transform: rotate(1deg); }
+.letter-wrap.is-open .letter-object { width: min(88vw, 760px); height: min(82dvh, 760px); aspect-ratio: auto; transform: rotate(.4deg); }
 .letter-object.is-open .fold-panel { transform: rotateX(0) rotateY(0); }
 .letter-object.is-open .letter-seal { opacity: 0; }
-.letter-object.is-open .letter-copy { opacity: 1; transform: scale(1); }
+.letter-object.is-open .letter-copy { opacity: 1; transform: scale(1); pointer-events: auto; }
+.letter-close { position: absolute; z-index: 85; top: max(18px, env(safe-area-inset-top)); right: max(18px, env(safe-area-inset-right)); padding: 8px 13px; border: 2px solid white; border-radius: 999px; background: var(--ink); color: white; cursor: pointer; font-weight: 700; box-shadow: 4px 4px 0 rgba(0,0,0,.18); }
 .letter-wrap.is-open .letter-hint { position: absolute; bottom: max(20px, env(safe-area-inset-bottom)); color: white; }
 
 .capy-nav { position: absolute; z-index: 12; right: max(28px, env(safe-area-inset-right)); bottom: max(19px, env(safe-area-inset-bottom)); width: clamp(130px, 14vw, 210px); padding: 0; border: 0; background: transparent; cursor: pointer; transform-origin: center; transition: transform .2s ease; }
@@ -132,11 +138,11 @@ body {
   .intro-copy h1 { font-size: clamp(37px, 12vw, 58px); }
   .cassette-cluster { top: 36%; right: 8vw; width: 54vw; max-width: 250px; }
   .cassette-note { margin-left: -20vw; font-size: 13px; }
-  .cassette-note span { font-size: 30px; }
+  .cassette-note .note-arrow { font-size: 30px; }
   .letter-wrap { left: 5vw; bottom: 13vh; }
   .letter-object { width: 42vw; min-width: 145px; }
   .letter-hint { font-size: 11px; }
-  .letter-wrap.is-open .letter-object { width: 90vw; aspect-ratio: 1.15; transform: none; }
+  .letter-wrap.is-open .letter-object { width: 90vw; height: 78dvh; aspect-ratio: auto; transform: none; }
   .letter-copy { inset: 5%; gap: 6px; font-size: clamp(11px, 3.3vw, 14px); }
   .capy-nav { width: 88px; right: 8px; bottom: 1px; }
   .capy-nav.back { left: 8px; }
