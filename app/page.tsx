@@ -55,7 +55,7 @@ export default function Home() {
 
   return (
     <main
-      className="story"
+      className={`story ${letterOpen ? "letter-is-open" : ""}`}
       onTouchStart={(event) => (touchStart.current = event.touches[0].clientX)}
       onTouchEnd={onTouchEnd}
     >
@@ -86,7 +86,7 @@ export default function Home() {
           <div className="cassette-cluster">
             <p className={`cassette-note ${songEnded ? "song-ended" : ""}`}>
               {songEnded ? <span className="ended-copy">this song is too short<br />to tell our story.</span> : <>i think about us<br />while made this song</>}
-              <span className="note-arrow">↘</span>
+              <span className="drawn-arrow note-arrow" aria-hidden="true" />
             </p>
             <button
               className={`cassette ${playing ? "is-playing" : ""}`}
@@ -106,19 +106,21 @@ export default function Home() {
           <div className={`letter-wrap ${letterOpen ? "is-open" : ""}`}>
             {letterOpen ? (
               <div className="letter-object is-open" role="document" aria-label="Birthday letter for Zia">
-                <span className="fold-panel fold-a" /><span className="fold-panel fold-b" />
-                <span className="fold-panel fold-c" /><span className="fold-panel fold-d" />
                 <span className="letter-copy"><span className="letter-body">{letterText}</span></span>
               </div>
             ) : (
-              <button className="letter-object" type="button" onClick={() => setLetterOpen(true)} aria-expanded="false" aria-label="Unfold the letter">
-                <span className="fold-panel fold-a" /><span className="fold-panel fold-b" />
-                <span className="fold-panel fold-c" /><span className="fold-panel fold-d" />
+              <button className="letter-object envelope" type="button" onClick={() => setLetterOpen(true)} aria-expanded="false" aria-label="Open the envelope">
+                <span className="envelope-paper" />
+                <span className="envelope-side envelope-left" />
+                <span className="envelope-side envelope-right" />
+                <span className="envelope-flap" />
                 <span className="letter-seal">for you</span>
               </button>
             )}
             {letterOpen && <button className="letter-close" type="button" onClick={() => setLetterOpen(false)}>fold it back ×</button>}
-            <span className="letter-hint">{letterOpen ? "scroll to read my letter" : "tap to unfold my letter ↗"}</span>
+            <span className="letter-hint">
+              {letterOpen ? "scroll to read my letter" : <>tap to open my letter <i className="drawn-arrow hint-arrow" aria-hidden="true" /></>}
+            </span>
           </div>
 
           <CapyNav direction="next" label="Go to the birthday page" onClick={() => setScene(1)} />
@@ -143,7 +145,7 @@ export default function Home() {
 
           <div className="birthday-message">
             <p>selamat menginjak umur <strong>28</strong>.</p>
-            <p>i root for your future and dreams!</p>
+            <p>I&apos;m rooting for your future and your dreams.</p>
             <span>wopyu!</span>
           </div>
 
@@ -163,7 +165,6 @@ function CapyNav({ direction, label, onClick }: { direction: "next" | "back"; la
   return (
     <button className={`capy-nav ${direction}`} type="button" onClick={onClick} aria-label={label}>
       <img src="assets/capybara-next.png" alt="" aria-hidden="true" />
-      <span>{direction === "next" ? "next page" : "go back"}</span>
     </button>
   );
 }

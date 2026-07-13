@@ -51,7 +51,9 @@ body {
 
 .cassette-cluster { position: absolute; right: 8vw; top: 17%; width: clamp(230px, 23vw, 360px); transform: rotate(3deg); }
 .cassette-note { margin: 0 0 4px -70px; color: #d85f51; font-size: clamp(16px, 1.7vw, 25px); line-height: 1.1; font-weight: 700; transform: rotate(-7deg); }
-.cassette-note .note-arrow { display: inline-block; font-size: 46px; transform: translate(5px, 12px) rotate(8deg); }
+.drawn-arrow { display: inline-block; position: relative; width: 37px; height: 23px; border-bottom: 4px solid currentColor; transform: rotate(38deg); transform-origin: center; }
+.drawn-arrow::after { content: ""; position: absolute; right: -1px; bottom: -4px; width: 13px; height: 13px; border-right: 4px solid currentColor; border-bottom: 4px solid currentColor; transform: rotate(-45deg); transform-origin: right bottom; }
+.cassette-note .note-arrow { margin-left: 8px; transform: translateY(5px) rotate(38deg); }
 .cassette-note .ended-copy { display: inline; font-size: inherit; transform: none; }
 .cassette-note.song-ended { margin-left: -105px; max-width: 315px; }
 .cassette { display: block; position: relative; width: 100%; aspect-ratio: 1.58; border: 4px solid var(--ink); border-radius: 17px; background: #71b0cf; box-shadow: 9px 10px 0 rgba(63,52,45,.22); cursor: pointer; transition: transform .2s ease; }
@@ -65,32 +67,35 @@ body {
 @keyframes reel-spin { to { transform: rotate(360deg); } }
 
 .letter-wrap { position: absolute; left: 8vw; bottom: 9vh; display: grid; justify-items: center; gap: 8px; z-index: 10; transition: background .3s ease; }
-.letter-object { position: relative; width: clamp(190px, 20vw, 310px); aspect-ratio: 1.5; padding: 0; border: 0; background: transparent; perspective: 900px; cursor: pointer; transition: width .65s cubic-bezier(.2,.75,.18,1), transform .65s ease; filter: drop-shadow(8px 9px 0 rgba(63,52,45,.16)); }
-.fold-panel { position: absolute; width: 50%; height: 50%; background: #fffdf5; border: 2px solid #d8cba8; backface-visibility: hidden; transition: transform .75s cubic-bezier(.2,.75,.18,1); }
-.fold-a { left: 0; top: 0; transform-origin: right bottom; transform: rotateY(18deg) rotateX(-8deg); }
-.fold-b { right: 0; top: 0; transform-origin: left bottom; transform: rotateY(-34deg) rotateX(-5deg); }
-.fold-c { left: 0; bottom: 0; transform-origin: right top; transform: rotateX(38deg) rotateY(8deg); }
-.fold-d { right: 0; bottom: 0; transform-origin: left top; transform: rotateX(50deg) rotateY(-22deg); }
+.letter-object { position: relative; width: clamp(190px, 20vw, 310px); aspect-ratio: 1.5; padding: 0; border: 0; background: transparent; cursor: pointer; transition: width .65s cubic-bezier(.2,.75,.18,1), transform .65s ease; filter: drop-shadow(8px 9px 0 rgba(63,52,45,.16)); }
+.envelope { overflow: hidden; border: 3px solid var(--ink); border-radius: 9px; background: #fffaf0; }
+.envelope-paper { position: absolute; inset: 0; background: #fffdf5; }
+.envelope-side { position: absolute; inset: 0; background: #f6ebce; }
+.envelope-left { clip-path: polygon(0 0, 55% 52%, 0 100%); }
+.envelope-right { clip-path: polygon(100% 0, 45% 52%, 100% 100%); }
+.envelope-flap { position: absolute; z-index: 2; inset: 0; background: #fff8e5; clip-path: polygon(0 0, 100% 0, 50% 57%); border-top: 1px solid #e2d3aa; }
+.envelope::after { content: ""; position: absolute; z-index: 1; inset: 0; background: #fbf0d4; clip-path: polygon(0 100%, 50% 48%, 100% 100%); }
 .letter-seal { position: absolute; z-index: 3; left: 50%; top: 50%; transform: translate(-50%,-50%) rotate(-7deg); display: grid; place-items: center; width: 58px; height: 58px; border-radius: 50%; background: var(--coral); color: #fff8df; border: 3px solid var(--ink); font-weight: 700; transition: opacity .25s ease; }
-.letter-copy { position: absolute; z-index: 4; inset: 5%; display: block; padding: 4% 5%; text-align: left; opacity: 0; transform: scale(.82); transition: opacity .35s ease .35s, transform .5s ease .28s; pointer-events: none; overflow-y: auto; overscroll-behavior: contain; font-family: "Segoe Print", "Comic Sans MS", cursive; font-size: clamp(12px, 1.02vw, 16px); line-height: 1.55; scrollbar-color: #d85f51 transparent; scrollbar-width: thin; }
+.letter-copy { position: absolute; z-index: 4; inset: 0; display: block; padding: clamp(30px, 6%, 54px); text-align: left; opacity: 0; transform: scale(.82); transition: opacity .35s ease .35s, transform .5s ease .28s; pointer-events: none; overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size: clamp(15px, 1.15vw, 18px); font-style: normal; font-weight: 450; line-height: 1.68; letter-spacing: .005em; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; scrollbar-color: #d85f51 transparent; scrollbar-width: thin; }
 .letter-body { white-space: pre-line; }
 .letter-copy::-webkit-scrollbar { width: 7px; }
 .letter-copy::-webkit-scrollbar-thumb { background: #d85f51; border-radius: 999px; }
 .letter-copy strong { color: #d85f51; font-size: 1.15em; }
 .letter-copy em { text-align: right; font-size: .86em; }
 .letter-hint { font-size: clamp(12px, 1.2vw, 17px); color: #7c6558; font-weight: 700; transform: rotate(-3deg); }
+.hint-arrow { width: 22px; height: 13px; border-bottom-width: 3px; margin-left: 5px; transform: translateY(-2px) rotate(-42deg); }
+.hint-arrow::after { width: 8px; height: 8px; right: 0; bottom: -3px; border-right-width: 3px; border-bottom-width: 3px; }
 .letter-wrap.is-open { position: fixed; inset: 0 auto auto 0; width: 100vw; height: 100dvh; background: rgba(63,52,45,.45); display: grid; place-items: center; z-index: 80; padding: 24px; }
-.letter-wrap.is-open .letter-object { width: min(88vw, 760px); height: min(82dvh, 760px); aspect-ratio: auto; transform: rotate(.4deg); }
-.letter-object.is-open .fold-panel { transform: rotateX(0) rotateY(0); }
+.letter-wrap.is-open .letter-object { width: min(88vw, 760px); height: min(78dvh, 730px); aspect-ratio: auto; transform: rotate(.2deg); background: #fffdf5; border: 2px solid #dbcda8; border-radius: 4px; box-shadow: 12px 14px 0 rgba(63,52,45,.14); filter: none; }
 .letter-object.is-open .letter-seal { opacity: 0; }
 .letter-object.is-open .letter-copy { opacity: 1; transform: scale(1); pointer-events: auto; }
 .letter-close { position: absolute; z-index: 85; top: max(18px, env(safe-area-inset-top)); right: max(18px, env(safe-area-inset-right)); padding: 8px 13px; border: 2px solid white; border-radius: 999px; background: var(--ink); color: white; cursor: pointer; font-weight: 700; box-shadow: 4px 4px 0 rgba(0,0,0,.18); }
-.letter-wrap.is-open .letter-hint { position: absolute; bottom: max(20px, env(safe-area-inset-bottom)); color: white; }
+.letter-wrap.is-open .letter-hint { position: absolute; bottom: max(26px, calc(env(safe-area-inset-bottom) + 8px)); color: white; }
+.story.letter-is-open .page-dots { opacity: 0; pointer-events: none; }
 
-.capy-nav { position: absolute; z-index: 12; right: max(28px, env(safe-area-inset-right)); bottom: max(19px, env(safe-area-inset-bottom)); width: clamp(130px, 14vw, 210px); padding: 0; border: 0; background: transparent; cursor: pointer; transform-origin: center; transition: transform .2s ease; }
+.capy-nav { position: absolute; z-index: 12; right: max(28px, env(safe-area-inset-right)); bottom: max(19px, env(safe-area-inset-bottom)); width: clamp(105px, 11vw, 165px); padding: 0; border: 0; background: transparent; cursor: pointer; transform-origin: center; transition: transform .2s ease; }
 .capy-nav:hover { transform: translateX(7px) rotate(2deg); }
 .capy-nav img { display: block; width: 100%; height: auto; animation: nav-bob 1.4s ease-in-out infinite; }
-.capy-nav span { display: inline-block; margin-top: -7px; padding: 3px 10px; background: #fff8df; border: 2px solid var(--ink); border-radius: 999px; font-weight: 700; font-size: 12px; }
 .capy-nav.back { left: max(24px, env(safe-area-inset-left)); right: auto; }
 .capy-nav.back img { transform: scaleX(-1); }
 .capy-nav.back:hover { transform: translateX(-7px) rotate(-2deg); }
@@ -101,7 +106,6 @@ body {
 .page-dots button.active { width: 28px; border-radius: 99px; background: var(--ink); }
 
 .birthday-scene { background: linear-gradient(160deg, #cdebd3 0 55%, #f8d8c3 55%); text-align: center; }
-.birthday-scene::before { content: ""; position: absolute; inset: 8% 5%; border: 3px dashed rgba(63,52,45,.26); border-radius: 45% 55% 48% 52% / 52% 48% 55% 45%; transform: rotate(-1deg); }
 .birthday-date { position: absolute; top: 3.7%; left: 50%; transform: translateX(-50%) rotate(-2deg); margin: 0; font: 800 clamp(11px, 1.1vw, 15px)/1 Arial, sans-serif; letter-spacing: .16em; text-transform: uppercase; white-space: nowrap; }
 .birthday-title { position: absolute; z-index: 2; top: 8.5%; left: 50%; transform: translateX(-50%) rotate(-1deg); display: flex; align-items: baseline; justify-content: center; gap: .25em; width: 90%; font-size: clamp(38px, 5vw, 78px); line-height: .95; letter-spacing: -.05em; }
 .birthday-title strong { color: #d95e52; font-weight: 800; }
@@ -136,24 +140,26 @@ body {
   .intro-copy { left: 7vw; top: 10%; width: 86vw; }
   .scribble-kicker { font-size: 13px; }
   .intro-copy h1 { font-size: clamp(37px, 12vw, 58px); }
-  .cassette-cluster { top: 36%; right: 8vw; width: 54vw; max-width: 250px; }
-  .cassette-note { margin-left: -20vw; font-size: 13px; }
-  .cassette-note .note-arrow { font-size: 30px; }
+  .cassette-cluster { top: 39%; right: 7vw; width: 54vw; max-width: 250px; }
+  .cassette-note { position: absolute; right: calc(100% + 10px); top: 3px; width: 32vw; margin: 0; font-size: 13px; }
+  .cassette-note.song-ended { margin-left: 0; max-width: none; }
+  .cassette-note .note-arrow { width: 25px; height: 15px; margin-left: 3px; border-bottom-width: 3px; }
+  .cassette-note .note-arrow::after { width: 9px; height: 9px; bottom: -3px; border-right-width: 3px; border-bottom-width: 3px; }
   .letter-wrap { left: 5vw; bottom: 13vh; }
   .letter-object { width: 42vw; min-width: 145px; }
   .letter-hint { font-size: 11px; }
-  .letter-wrap.is-open .letter-object { width: 90vw; height: 78dvh; aspect-ratio: auto; transform: none; }
-  .letter-copy { inset: 5%; gap: 6px; font-size: clamp(11px, 3.3vw, 14px); }
-  .capy-nav { width: 88px; right: 8px; bottom: 1px; }
+  .letter-wrap.is-open { padding: max(70px, calc(env(safe-area-inset-top) + 58px)) 16px max(70px, calc(env(safe-area-inset-bottom) + 48px)); }
+  .letter-wrap.is-open .letter-object { width: 92vw; height: 72dvh; max-height: 680px; aspect-ratio: auto; transform: none; }
+  .letter-copy { padding: 28px 24px 42px; font-size: 15px; line-height: 1.66; }
+  .letter-wrap.is-open .letter-hint { bottom: max(24px, calc(env(safe-area-inset-bottom) + 12px)); }
+  .capy-nav { width: 94px; right: 8px; bottom: 4px; }
   .capy-nav.back { left: 8px; }
-  .capy-nav span { font-size: 10px; }
   .page-dots { bottom: 15px; }
   .birthday-title { top: 9%; width: 96%; display: block; font-size: clamp(37px, 12vw, 54px); }
   .birthday-title strong { display: block; }
   .birthday-date { top: 4%; }
   .capy-stage { top: 23%; width: 92vw; height: 48vh; }
   .birthday-message { bottom: 15%; width: 92%; font-size: clamp(16px, 5vw, 22px); }
-  .birthday-scene::before { inset: 7% 3% 8%; }
   .confetti i { width: 8px; height: 18px; border-width: 2px; }
 }
 
