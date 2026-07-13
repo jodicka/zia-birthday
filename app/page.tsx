@@ -82,7 +82,7 @@ export default function Home() {
       <div className="scene-track" style={{ transform: `translateX(-${scene * 50}%)` }}>
         <section className="scene intro-scene" aria-hidden={scene !== 0}>
           <header className="tiny-header">
-            <span>for maulida azizza shizen</span>
+            <span>for zia</span>
             <span>15 · 07 · 1998</span>
           </header>
 
@@ -100,11 +100,11 @@ export default function Home() {
               aria-pressed={playing}
               aria-label={playing ? "Pause the birthday tape" : "Play the birthday tape"}
             >
-              <span className="cassette-label">birthday tape</span>
+              <span className="cassette-label">inspired by us.</span>
               <span className="reel-window">
                 <i className="reel left-reel" /><i className="tape-line" /><i className="reel right-reel" />
               </span>
-              <span className="cassette-footer">{playing ? "playing a little tune" : "press to play"}</span>
+              <span className="cassette-footer">{playing ? "sleepless dawn" : "press to play"}</span>
             </button>
           </div>
 
@@ -137,7 +137,7 @@ export default function Home() {
           <div className="confetti" aria-hidden="true">
             {Array.from({ length: 18 }, (_, index) => <i key={index} />)}
           </div>
-          <p className="birthday-date">15 july · twenty eight</p>
+          <p className="birthday-date">15 july · 2026</p>
           <div className="birthday-title">
             <span>happy birthday,</span>
             <strong>princess!</strong>

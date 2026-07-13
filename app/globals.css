@@ -58,7 +58,7 @@ body {
 .reel-window { position: absolute; left: 12%; right: 12%; top: 35%; height: 41%; display: flex; align-items: center; justify-content: space-around; border: 4px solid var(--ink); border-radius: 40px; background: #fff7df; overflow: hidden; }
 .reel { width: 28%; aspect-ratio: 1; border: 6px dotted var(--ink); border-radius: 50%; background: var(--coral); box-shadow: inset 0 0 0 5px #fff7df; }
 .tape-line { position: absolute; width: 37%; height: 4px; background: var(--ink); }
-.cassette.is-playing .reel { animation: reel-spin 1.05s linear infinite; }
+.cassette.is-playing .reel { animation: reel-spin 1.8s linear infinite; }
 .cassette-footer { position: absolute; bottom: 6%; left: 0; right: 0; font: 700 11px/1 Arial, sans-serif; text-transform: uppercase; letter-spacing: .12em; }
 @keyframes reel-spin { to { transform: rotate(360deg); } }
 
@@ -74,7 +74,7 @@ body {
 .letter-copy strong { color: #d85f51; font-size: 1.15em; }
 .letter-copy em { text-align: right; font-size: .86em; }
 .letter-hint { font-size: clamp(12px, 1.2vw, 17px); color: #7c6558; font-weight: 700; transform: rotate(-3deg); }
-.letter-wrap.is-open { position: fixed; inset: 0; width: auto; background: rgba(63,52,45,.45); display: grid; place-items: center; z-index: 80; padding: 24px; }
+.letter-wrap.is-open { position: fixed; inset: 0 auto auto 0; width: 100vw; height: 100dvh; background: rgba(63,52,45,.45); display: grid; place-items: center; z-index: 80; padding: 24px; }
 .letter-wrap.is-open .letter-object { width: min(88vw, 660px); max-height: 76vh; transform: rotate(1deg); }
 .letter-object.is-open .fold-panel { transform: rotateX(0) rotateY(0); }
 .letter-object.is-open .letter-seal { opacity: 0; }
@@ -136,7 +136,7 @@ body {
   .letter-wrap { left: 5vw; bottom: 13vh; }
   .letter-object { width: 42vw; min-width: 145px; }
   .letter-hint { font-size: 11px; }
-  .letter-wrap.is-open .letter-object { width: 94vw; aspect-ratio: 1.15; }
+  .letter-wrap.is-open .letter-object { width: 90vw; aspect-ratio: 1.15; transform: none; }
   .letter-copy { inset: 5%; gap: 6px; font-size: clamp(11px, 3.3vw, 14px); }
   .capy-nav { width: 88px; right: 8px; bottom: 1px; }
   .capy-nav.back { left: 8px; }
