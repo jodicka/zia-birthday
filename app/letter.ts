@@ -40,4 +40,4 @@ Selamat ulang tahun, Ayang!!!
 
 Semoga tahun ini membawa lebih banyak napas lega untuk kamu ya. AYO MAKAN SOTO MIE BOGOR ENAKKKK!!! aku masih penasaran.. :(
 
-— Aku`;
+— Mas Dicka`;

@@ -8,6 +8,7 @@ export default function Home() {
   const [letterOpen, setLetterOpen] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [songEnded, setSongEnded] = useState(false);
+  const [capyHappy, setCapyHappy] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const touchStart = useRef(0);
 
@@ -86,7 +87,7 @@ export default function Home() {
           <div className="cassette-cluster">
             <p className={`cassette-note ${songEnded ? "song-ended" : ""}`}>
               {songEnded ? <span className="ended-copy">this song is too short<br />to tell our story.</span> : <>i think about us<br />while made this song</>}
-              <span className="drawn-arrow note-arrow" aria-hidden="true" />
+              <ArrowIcon className="note-arrow" direction="down" />
             </p>
             <button
               className={`cassette ${playing ? "is-playing" : ""}`}
@@ -119,7 +120,7 @@ export default function Home() {
             )}
             {letterOpen && <button className="letter-close" type="button" onClick={() => setLetterOpen(false)}>fold it back ×</button>}
             <span className="letter-hint">
-              {letterOpen ? "scroll to read my letter" : <>tap to open my letter <i className="drawn-arrow hint-arrow" aria-hidden="true" /></>}
+              {letterOpen ? "scroll to read my letter" : <>tap to open my letter <ArrowIcon className="hint-arrow" direction="up" /></>}
             </span>
           </div>
 
@@ -136,12 +137,20 @@ export default function Home() {
             <strong>princess!</strong>
           </div>
 
-          <div className="capy-stage" aria-label="A capybara walking in place with a birthday hat and party blower">
+          <button
+            className={`capy-stage ${capyHappy ? "is-happy" : ""}`}
+            type="button"
+            onClick={() => setCapyHappy((happy) => !happy)}
+            aria-pressed={capyHappy}
+            aria-label={capyHappy ? "Make the birthday capybara calm again" : "Make the birthday capybara happy"}
+          >
             <span className="ground-shadow" aria-hidden="true" />
-            <img src="assets/capybara-birthday.png" alt="Capybara wearing a birthday hat and party blower" />
+            <img className="capy-normal" src="assets/capybara-birthday.png" alt="" aria-hidden="true" />
+            <img className="capy-happy" src="assets/capybara-birthday-happy.png" alt="" aria-hidden="true" />
+            <span className="capy-bubble" role="status">alo Ayang!</span>
             <span className="walk-dust dust-one" aria-hidden="true">✦</span>
             <span className="walk-dust dust-two" aria-hidden="true">·</span>
-          </div>
+          </button>
 
           <div className="birthday-message">
             <p>selamat menginjak umur <strong>28</strong>.</p>
@@ -158,6 +167,18 @@ export default function Home() {
         <button className={scene === 1 ? "active" : ""} onClick={() => setScene(1)} aria-label="Birthday page" />
       </div>
     </main>
+  );
+}
+
+function ArrowIcon({ className, direction }: { className: string; direction: "down" | "up" }) {
+  return direction === "down" ? (
+    <svg className={className} viewBox="0 0 34 30" aria-hidden="true" focusable="false">
+      <path d="M3 3c12 3 20 11 27 23M19 23l11 3-2-11" />
+    </svg>
+  ) : (
+    <svg className={className} viewBox="0 0 34 30" aria-hidden="true" focusable="false">
+      <path d="M3 27C12 20 20 12 30 4M19 5l11-1-2 11" />
+    </svg>
   );
 }
 
