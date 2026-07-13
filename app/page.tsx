@@ -145,8 +145,8 @@ export default function Home() {
             aria-label={capyHappy ? "Make the birthday capybara calm again" : "Make the birthday capybara happy"}
           >
             <span className="ground-shadow" aria-hidden="true" />
-            <img className="capy-normal" src="assets/capybara-birthday.png" alt="" aria-hidden="true" />
-            <img className="capy-happy" src="assets/capybara-birthday-happy.png" alt="" aria-hidden="true" />
+            <img className="capy-normal" src="assets/capybara-birthday.webp" alt="" aria-hidden="true" decoding="async" />
+            <img className="capy-happy" src="assets/capybara-birthday-happy.webp" alt="" aria-hidden="true" decoding="async" />
             <span className="capy-bubble" role="status">alo Ayang!</span>
             <span className="walk-dust dust-one" aria-hidden="true">✦</span>
             <span className="walk-dust dust-two" aria-hidden="true">·</span>
@@ -185,7 +185,7 @@ function ArrowIcon({ className, direction }: { className: string; direction: "do
 function CapyNav({ direction, label, onClick }: { direction: "next" | "back"; label: string; onClick: () => void }) {
   return (
     <button className={`capy-nav ${direction}`} type="button" onClick={onClick} aria-label={label}>
-      <img src="assets/capybara-next.png" alt="" aria-hidden="true" />
+      <img src="assets/capybara-next.webp" alt="" aria-hidden="true" decoding="async" />
     </button>
   );
 }

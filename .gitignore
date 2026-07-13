@@ -21,6 +21,12 @@
 # misc
 .DS_Store
 *.pem
+*.key
+*.p12
+*.pfx
+.npmrc
+.netrc
+credentials*.json
 
 # debug
 npm-debug.log*
@@ -36,6 +42,7 @@ yarn-error.log*
 
 # typescript
 next-env.d.ts
+*.tsbuildinfo
 /dist/
 /dist-pages/
 /.wrangler/
